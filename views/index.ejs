@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <label for="id">아파트 이름</label>
+    <form onsubmit="return search_function(event)">
+      <input type="text" id="name" name="searchName" value="<%=search_value%>">
+      <button type="submit" id="search">검색</button>
+    </form>
+    <div>
+      <table>
+        <thaed>
+          <tr>
+            <th>순번</th>
+            <th>이름</th>
+            <th>동</th>
+            <th>길</th>
+            <th>크기</th>
+          </tr>
+        </thaed>
+        <tbody>
+          <% for(var i=0;i<arr.length;i++){ %>
+            <tr>
+              <td><%=i+1%></td>
+              <td><a href="/search/<%=arr[i]['name']+'?'+arr[i]['size']%>"><%=arr[i]['name']%></a></td>
+              <td><%=arr[i]['dong']%></td>
+              <td><%=arr[i]['street_adress']%></td>
+              <td><%=arr[i]['size']%></td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+      <div id="chart" style="display:none;">
+        <div id="chart_div"></div>
+      </div>
+    </div>
+    <div onclick="showChart();">click</div>
+    <script>
+      //form에서 submit 이벤트가 실행이 되면 기본적으로 form 안에 있는 field들의 name:value형식으로 값을 보냄. 이게 기본 기능
+      //근데 여기서는 이런 방식이 아닌 주소를 /search/검색어 형식으로 변경하는 방법을 사용하기로함.
+      function search_function(e){
+        e.preventDefault(); //form에서의 기본 event를 실행하지않도록함.
+        location.href="/search/"+document.getElementById("name").value; //현재 주소를 바꿈.
+      }
+
+      function showChart() {
+        document.getElementById('chart').style.display='block';
+      }
+    </script>
+  </body>
+</html>
