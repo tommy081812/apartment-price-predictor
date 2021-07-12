@@ -4,14 +4,17 @@ const mariadb = require('../maria');
 var show_value = '';
 var arr = [];
 var prices = [];
+let dong_list =[];
+mariadb.query("SELECT DISTINCT dong FROM apart_price_clone ORDER BY dong", function(err, rows, fields) {
+    if(!err){
+        dong_list=rows;
+    }
+});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    mariadb.query("SELECT DISTINCT dong FROM apart_price_clone ORDER BY dong", function(err, rows, fields) {
-        console.log(rows);
-        res.render('index', {title:'Search Your Apartment',  search_value:'', dong_list:rows});
+        res.render('index', {title:'Search Your Apartment',  search_value:'', dong_list:dong_list, dong_value:''});
 
-      });
 });
 
 router.get('/:dong_value/:name_value', function(req, res, next) {
@@ -19,33 +22,69 @@ router.get('/:dong_value/:name_value', function(req, res, next) {
     name_value = req.params.name_value;
     var search_value = '%' + name_value + '%';
     var page_num=0;
-    mariadb.query("SELECT DISTINCT street_adress, dong, name FROM apart_price_clone WHERE dong=? AND name LIKE ? ORDER BY name LIMIT ?,20",[dong_value, search_value,page_num], function(err, rows, fields) {
-      if (!err) {
-        arr = rows;
-        console.log(rows);
-        res.render('index', {title:'Search Results', arr:arr, search_value:name_value, page_num:page_num, dong_list:[d});
-      } else {
-        console.log("err: " + err);
-        res.send(err);
-      }
-    });
+    var total_page=0;
+    if (dong_value != "any") {
+        mariadb.query("SELECT COUNT(DISTINCT street_adress, dong, name) FROM apart_price_clone WHERE dong=? AND name LIKE ?",[dong_value, search_value], function(err, num, fields) {
+            if (!err) {
+                total_page=num[0]['COUNT(DISTINCT street_adress, dong, name)']/20+1;
+                console.log(num);
+            }
+        });
+
+        mariadb.query("SELECT DISTINCT street_adress, dong, name FROM apart_price_clone WHERE dong=? AND name LIKE ? ORDER BY name LIMIT 20 OFFSET ?",[dong_value, search_value,page_num], function(err, rows, fields) {
+            if (!err) {
+                arr = rows;
+                res.render('index', {title:'Search Results', arr:arr, search_value:name_value, page_num:page_num, dong_list:dong_list, dong_value:dong_value, total_page:total_page});
+            }
+        });
+    } else {
+        mariadb.query("SELECT COUNT(DISTINCT street_adress, dong, name) FROM apart_price_clone WHERE name LIKE ?",[search_value], function(err, num, fields) {
+            if (!err) {
+                total_page=num[0]['COUNT(DISTINCT street_adress, dong, name)']/20+1;
+            }
+        });
+
+        mariadb.query("SELECT DISTINCT street_adress, dong, name FROM apart_price_clone WHERE name LIKE ? ORDER BY name LIMIT 20 OFFSET ?",[search_value,page_num], function(err, rows, fields) {
+            if (!err) {
+                arr = rows;
+                res.render('index', {title:'Search Results', arr:arr, search_value:name_value, page_num:page_num, dong_list:dong_list, dong_value:dong_value, total_page:total_page});
+            }
+        });
+    }
   });
 
   router.get('/:dong_value/:name_value/:page_num', function(req, res, next) {
-    var page_num=parseInt(req.params.page_num);
+    var page_num=(parseInt(req.params.page_num)-1) * 20;
     dong_value = req.params.dong_value;
     name_value = req.params.name_value;
     var search_value = '%' + name_value + '%';
-    mariadb.query("SELECT DISTINCT street_adress, dong, name FROM apart_price_clone WHERE dong=? AND name LIKE ? ORDER BY name LIMIT ?,20",[dong_value, search_value,page_num], function(err, rows, fields) {
-      if (!err) {
-        arr = rows;
-        console.log(rows);
-        res.render('index', {title:'Search Results', arr:arr, search_value:name_value, page_num:page_num, dong_list:[]]});
-      } else {
-        console.log("err: " + err);
-        res.send(err);
-      }
-    });
+    if (dong_value != "any") {
+        mariadb.query("SELECT COUNT(DISTINCT street_adress, dong, name) FROM apart_price_clone WHERE dong=? AND name LIKE ?",[dong_value, search_value], function(err, num, fields) {
+            if (!err) {
+                total_page=num[0]['COUNT(DISTINCT street_adress, dong, name)']/20+1;
+            }
+        });
+
+        mariadb.query("SELECT DISTINCT street_adress, dong, name FROM apart_price_clone WHERE dong=? AND name LIKE ? ORDER BY name LIMIT 20 OFFSET ?",[dong_value, search_value,page_num], function(err, rows, fields) {
+            if (!err) {
+                arr = rows;
+                res.render('index', {title:'Search Results', arr:arr, dong_value:dong_value,search_value:name_value, page_num:page_num, dong_list:dong_list, total_page:total_page});
+            }
+        });
+    } else {
+        mariadb.query("SELECT COUNT(DISTINCT street_adress, dong, name) FROM apart_price_clone WHERE dong=? AND name LIKE ?",[dong_value, search_value], function(err, num, fields) {
+            if (!err) {
+                total_page=num[0]['COUNT(DISTINCT street_adress, dong, name)']/20+1;
+            }
+        });
+
+        mariadb.query("SELECT DISTINCT street_adress, dong, name FROM apart_price_clone WHERE name LIKE ? ORDER BY name LIMIT 20 OFFSET ?",[search_value,page_num], function(err, rows, fields) {
+            if (!err) {
+                arr = rows;
+                res.render('index', {title:'Search Results', arr:arr, dong_value:dong_value,search_value:name_value, page_num:page_num, dong_list:dong_list, total_page:total_page});
+            }
+        });
+    }
   });
 
 
