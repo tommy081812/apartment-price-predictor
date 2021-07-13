@@ -1,10 +1,12 @@
 var express = require('express');
 var router = express.Router();
 const mariadb = require('../maria');
+//const chart = require('../commitChart');
 var show_value = '';
 var arr = [];
 var prices = [];
 let dong_list =[];
+var total_page = 0;
 mariadb.query("SELECT DISTINCT dong FROM apart_price_clone ORDER BY dong", function(err, rows, fields) {
     if(!err){
         dong_list=rows;
@@ -13,7 +15,7 @@ mariadb.query("SELECT DISTINCT dong FROM apart_price_clone ORDER BY dong", funct
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-        res.render('index', {title:'Search Your Apartment',  search_value:'', dong_list:dong_list, dong_value:''});
+        res.render('index', {title:'Search Your Apartment',  search_value:'', dong_list:dong_list, dong_value:'', total_page:total_page, arr:arr});
 
 });
 
@@ -27,7 +29,7 @@ router.get('/:dong_value/:name_value', function(req, res, next) {
         mariadb.query("SELECT COUNT(DISTINCT street_adress, dong, name) FROM apart_price_clone WHERE dong=? AND name LIKE ?",[dong_value, search_value], function(err, num, fields) {
             if (!err) {
                 total_page=num[0]['COUNT(DISTINCT street_adress, dong, name)']/20+1;
-                console.log(num);
+                if (total_page>10) {total_page=10;}
             }
         });
 
@@ -41,6 +43,7 @@ router.get('/:dong_value/:name_value', function(req, res, next) {
         mariadb.query("SELECT COUNT(DISTINCT street_adress, dong, name) FROM apart_price_clone WHERE name LIKE ?",[search_value], function(err, num, fields) {
             if (!err) {
                 total_page=num[0]['COUNT(DISTINCT street_adress, dong, name)']/20+1;
+                if (total_page>10) {total_page=10;}
             }
         });
 
@@ -62,6 +65,7 @@ router.get('/:dong_value/:name_value', function(req, res, next) {
         mariadb.query("SELECT COUNT(DISTINCT street_adress, dong, name) FROM apart_price_clone WHERE dong=? AND name LIKE ?",[dong_value, search_value], function(err, num, fields) {
             if (!err) {
                 total_page=num[0]['COUNT(DISTINCT street_adress, dong, name)']/20+1;
+                if (total_page>10) {total_page=10;}
             }
         });
 
@@ -75,6 +79,7 @@ router.get('/:dong_value/:name_value', function(req, res, next) {
         mariadb.query("SELECT COUNT(DISTINCT street_adress, dong, name) FROM apart_price_clone WHERE dong=? AND name LIKE ?",[dong_value, search_value], function(err, num, fields) {
             if (!err) {
                 total_page=num[0]['COUNT(DISTINCT street_adress, dong, name)']/20+1;
+                if (total_page>10) {total_page=10;}
             }
         });
 
@@ -87,6 +92,16 @@ router.get('/:dong_value/:name_value', function(req, res, next) {
     }
   });
 
+  router.get('/:dong_value/:name_value/graph', function(req, res, next) {
+    dong_value = req.params.dong_value;
+    name_value = req.params.name_value;
+    mariadb.query("SELECT price, sold_date FROM apart_price_clone WHERE dong=? AND name=?", [dong_value, name_value], function(err, rows, fields) {
+
+    });
+    //chart.renderChart();
+  });
+ 
+  module.exports = router;
 
   /*
   router.get('/:search_value/:name_size', function(req, res, next) {
@@ -105,6 +120,3 @@ router.get('/:dong_value/:name_value', function(req, res, next) {
     });
   });
 */
-
-
-module.exports = router;

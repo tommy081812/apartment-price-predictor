@@ -24,6 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/vue',express.static(path.join(__dirname, 'node_modules','vue','dist'))); //client가 해당 경로에 있는 파일에 직접적으로 접속이 가능하게함.
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
