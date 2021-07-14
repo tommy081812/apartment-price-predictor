@@ -17,7 +17,7 @@
         <%} %>
       </select>
       <label for="id">아파트 이름</label>
-      <input type="text" id="name" name="searchName" value="<%=search_value%>">
+      <input type="text" id="name" name="searchName" value="<%=name_value%>">
       <button type="submit" id="search">검색</button>
     </form>
     <div>
@@ -32,13 +32,13 @@
         </thaed>
         <tbody>
           <% var page = 0;
-          if(typeof arr !=='undefined'){
-          for(var i=0; i<arr.length; i++){ %>
+          if(typeof price_list !=='undefined'){
+          for(var i=0; i<price_list.length; i++){ %>
             <tr>
               <td><%=i+1%></td>
-              <td><a href="/search/<%=arr[i]['name']+'?'+arr[i]['size']%>"><%=arr[i]['name']%></a></td>
-              <td><%=arr[i]['dong']%></td>
-              <td><%=arr[i]['street_adress']%></td>
+              <td><a href="/search/<%=price_list[i]['name']+'?'+price_list[i]['size']%>"><%=price_list[i]['name']%></a></td>
+              <td><%=price_list[i]['dong']%></td>
+              <td><%=price_list[i]['street_adress']%></td>
            </tr>
           <% } }%>
         </tbody>
@@ -48,7 +48,7 @@
       <table style="border-collapse: collapse;">
         <tbody>
           <% for(var i=1; i<=total_page; i++) {%>
-          <td><a href="/search/<%=dong_value%>/<%=search_value%>/<%=i%>"><%=i%></a></td>
+          <td><a href="/search/<%=dong_value%>/<%=name_value%>/<%=i%>"><%=i%></a></td>
           <%}%>
         </tbody>
       </table>
@@ -59,11 +59,11 @@
         <form onsubmit="return search_function(event)">
           <label for="dong">동 선택</label>
           <select v-model="dong_value" id="dong">
-            <option value="any">Any</option>
-            <option v-for="item in d_l" v-bind:value="item.dong">{{item.dong}}</option>
+            <option value="any" selected>Any</option>
+            <option v-for="item in dong_list" v-bind:value="item.dong">{{item.dong}}</option>
           </select>
           <label for="id">아파트 이름</label>
-          <input type="text" id="name" name="searchName" value="<%=search_value%>">
+          <input type="text" id="name" name="searchName" value="<%=name_value%>">
           <button type="submit" id="search">검색</button>
         </form>
       </div>
@@ -77,9 +77,9 @@
           </tr>
         </thaed>
         <tbody>
-            <tr v-for="(item, index) in list">
+            <tr v-for="(item, index) in price_list">
               <td>{{index+1}}</td>
-              <td><a v-bind:href="'/search/'+item.dong+'/'+item.name+'/more'">{{item.name}}</a></td>
+              <td><a v-bind:href="'/search/'+item.dong+'/'+item.name">{{item.name}}</a></td>
               <td>{{item.dong}}</td>
               <td>{{item.street_adress}}</td>
            </tr>
@@ -87,25 +87,34 @@
       </table>
       <table style="border-collapse: collapse;">
         <tbody>
-          <td v-for="i in total_page"><a v-bind:href="'/search/'+ dong_value + '/' + search_value + '/' + i">{{i}}</a></td>
+          <td v-for="i in total_page"><a v-bind:href="'/search/'+ dong_value + '/' + name_value + '/' + i">{{i}}</a></td>
         </tbody>
       </table>
     </div>
+    <canvas id="myChart"><canvas>
+    </div>
     <script>
       var dong_list = <%-JSON.stringify(dong_list) %>;
-      var prices = <%-JSON.stringify(arr) %>;
+      var price_list = <%-JSON.stringify(price_list) %>;
       var total_page = <%=total_page%>;
       var dong_value = "<%=dong_value%>";
-      var search_value = "<%=search_value%>";
+      var name_value = "<%=name_value%>";
     </script>
     <script src ='/vue/vue.min.js'></script>
     <script src ='/javascripts/common.vue.js'></script>
+    <script src ='/javascripts/commitChart.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
+      var myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+      );
       //form에서 submit 이벤트가 실행이 되면 기본적으로 form 안에 있는 field들의 name:value형식으로 값을 보냄. 이게 기본 기능
       //근데 여기서는 이런 방식이 아닌 주소를 /search/검색어 형식으로 변경하는 방법을 사용하기로함.
       function search_function(e){
         e.preventDefault(); //form에서의 기본 event를 실행하지않도록함.
-        location.href="/search/"+document.getElementById("dong").value+"/"+document.getElementById("name").value; //현재 주소를 바꿈.
+        location.href="/search/"+document.getElementById("dong").value+"/"+document.getElementById("name").value+"/1"; //현재 주소를 바꿈.
       }
 
       function showChart() {

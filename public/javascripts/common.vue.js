@@ -3,11 +3,11 @@ var apt_price_list_app;
 if(document.getElementById("apt_price_list_app")!==null){
     apt_price_list_app = new Vue({
         el:"#apt_price_list_app",
-        data: {d_l:dong_list,
-            list:prices,
+        data: {dong_list:dong_list,
+            price_list:price_list,
             total_page:total_page,
             dong_value:dong_value,
-            search_value:search_value
+            name_value:name_value
         },
         methods:{
             get_dong_list:function(){
