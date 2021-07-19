@@ -8,17 +8,23 @@
   "dependencies": {
     "chart.js": "^3.4.1",
     "chartjs-adapter-date-fns": "^2.0.0",
+    "chartjs-adapter-luxon": "^1.0.0",
     "cookie-parser": "~1.4.4",
     "date-fns": "^2.22.1",
     "debug": "~2.6.9",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
+    "luxon": "^2.0.1",
     "mariadb": "^2.5.4",
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
     "socket.io": "^4.1.3",
     "vue": "^2.6.14",
     "vue-chartjs": "^3.5.1"
+  },
+  "devDependencies": {
+    "xxxxx": "^1.0.3",
+    "xxxxxx": "^10.0.1"
   }
 }

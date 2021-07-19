@@ -11,18 +11,18 @@
         var size, price_data, date_labels, myChart, data, config;
     </script>
     <% var keys = Object.keys(size_list);
-    console.log(keys.length);
     for (var i=0; i<keys.length; i++) { %>
     <canvas id=<%="myChart"+i%>></canvas>
     <script>
         size = <%= keys[i] %>;
         price_data = [<%=size_list[keys[i]][0]%>];
-        date_labels = [<%=size_list[keys[i]][1]%>];
+        date_labels = <%-JSON.stringify(size_list[keys[i]][1]) %>;
     </script>
-    <script src ='/vue/vue.min.js'></script>
-    <script src ='/javascripts/commitChart.js'></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <script>
+        console.log(date_labels);
         var <%="myChart"+i%> = new Chart(
             document.getElementById("<%="myChart"+i%>"),
             { type: 'line',
@@ -46,7 +46,9 @@
                             display: true,
                             text: 'Year' },
                             type: 'time',
-                            time: {unit: 'year'}
+                            time: {
+                                format: 'yyyy-MM-dd'
+                                }
                         },
                         y: {
                             display: true,

@@ -62,6 +62,7 @@ router.get('/:dong_value/:name_value/:curr_page', function(req, res, next) {
     mariadb.query("SELECT price, sold_date, size FROM apart_price_clone WHERE name=? AND dong=?", [name_value, dong_value], function(err, rows, fields) {
         if (!err) {
             var size_list = {};
+            var newStr ='';
             //var price =[];
             //var date = [];
             for (var i=0; i < rows.length; i++) {
@@ -70,11 +71,11 @@ router.get('/:dong_value/:name_value/:curr_page', function(req, res, next) {
                     size_list[size] = [[], []];
                 }
                 size_list[size][0].push(rows[i]['price']);
-                size_list[size][1].push(rows[i]['sold_date']);
+                console.log(rows[i]['sold_date']);
+                size_list[size][1].push(rows[i]['sold_date'].toString());
                 //price[i] = rows[i]['price'];
                 //date[i] = rows[i]['sold_date'];
             }
-            console.log(size_list);
             res.render('graph',{title: dong_value + " " + name_value, size_list:size_list});
             //res.render('graph',{title: dong_value + " " + name_value, price:price, date:date});
         } else {
