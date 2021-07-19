@@ -72,7 +72,7 @@ router.get('/:dong_value/:name_value/:curr_page', function(req, res, next) {
                 }
                 size_list[size][0].push(rows[i]['price']);
                 console.log(rows[i]['sold_date']);
-                size_list[size][1].push(rows[i]['sold_date'].toString());
+                size_list[size][1].push(rows[i]['sold_date']);
                 //price[i] = rows[i]['price'];
                 //date[i] = rows[i]['sold_date'];
             }
