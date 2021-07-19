@@ -1,4 +1,4 @@
-const data = {
+data = {
   labels: date_labels,
   datasets: [{
     label: size,
@@ -7,7 +7,7 @@ const data = {
     data: price_data,
   }]
 };
-const config = {
+config = {
   type: 'line',
   data,
   options: {} 

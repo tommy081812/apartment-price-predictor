@@ -74,6 +74,7 @@ router.get('/:dong_value/:name_value/:curr_page', function(req, res, next) {
                 //price[i] = rows[i]['price'];
                 //date[i] = rows[i]['sold_date'];
             }
+            console.log(size_list);
             res.render('graph',{title: dong_value + " " + name_value, size_list:size_list});
             //res.render('graph',{title: dong_value + " " + name_value, price:price, date:date});
         } else {

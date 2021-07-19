@@ -6,26 +6,66 @@
   </head>
   <body>
     <h1><%= title %></h1>
-    <% var keys = Object.keys(size_list);
-    for (var i=0; i<keys.length; i++) {%>
-    <canvas id="myChart"><canvas>
     </div>
     <script>
-        <% var size = keys[i]; %>
-        var price_data = [<%=size_list[size][0]%>];
-        var date_labels = [<%=size_list[size][1]%>];
+        var size, price_data, date_labels, myChart, data, config;
     </script>
-    <% } %>
+    <% var keys = Object.keys(size_list);
+    console.log(keys.length);
+    for (var i=0; i<keys.length; i++) { %>
+    <canvas id=<%="myChart"+i%>></canvas>
+    <script>
+        size = <%= keys[i] %>;
+        price_data = [<%=size_list[keys[i]][0]%>];
+        date_labels = [<%=size_list[keys[i]][1]%>];
+    </script>
     <script src ='/vue/vue.min.js'></script>
     <script src ='/javascripts/commitChart.js'></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script>
-      var myChart = new Chart(
-        document.getElementById('myChart'),
-        config
-      );
-      console.log(myChart.config.labels);
-    </script>
+        var <%="myChart"+i%> = new Chart(
+            document.getElementById("<%="myChart"+i%>"),
+            { type: 'line',
+            data: {
+                    labels: date_labels,
+                    datasets: [{label: "House Price",
+                                data: price_data,
+                                backgroundColor: 'rgb(255, 99, 132)',
+                                borderColor: 'rgb(255, 99, 132)',
+                                }]
+                },
+            options: {plugins: {title: {
+                            display: true,
+                            text: "Area: " + size + " m^2",
+                            }   
+                    },
+                scales: {
+                        x: {
+                            display: true,
+                            title: {
+                            display: true,
+                            text: 'Year' },
+                            type: 'time',
+                            time: {unit: 'year'}
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                            display: true,
+                            text: 'Sold Price in 10,000KRW'
+                            }
+                        }
+                    }
+                }
+            });
+        /*
+        myChart.config.data.datasets.push({
+            label: size,
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: price_data,
+        });
+        */
+    </script> <% } %>
   </body>
 </html>
