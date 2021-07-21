@@ -114,7 +114,7 @@
       //근데 여기서는 이런 방식이 아닌 주소를 /search/검색어 형식으로 변경하는 방법을 사용하기로함.
       function search_function(e){
         e.preventDefault(); //form에서의 기본 event를 실행하지않도록함.
-        location.href="/search/"+document.getElementById("dong").value+"/"+document.getElementById("name").value+"/1"; //현재 주소를 바꿈.
+        location.href="/search/"+document.getElementById("dong").value.trim()+"/"+document.getElementById("name").value+"/1"; //현재 주소를 바꿈.
       }
 
       function showChart() {

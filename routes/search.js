@@ -82,6 +82,10 @@ router.get('/:dong_value/:name_value/:curr_page', function(req, res, next) {
             console.log("err graph");
         }
     });
+
+    mariadb.query("SELECT DISTINCT p.size, p.price FROM apart_price_clone AS a, prediction AS p WHERE a.dong=? AND a.name=? AND a.street_adress_code=p.street_adress_code AND p.size=a.size", [name_value, dong_value], function(err, rows, fields) {
+
+    });
   });
  
   module.exports = router;
