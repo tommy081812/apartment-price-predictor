@@ -2,9 +2,9 @@
 <html>
   <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/graph.css' />
   </head>
-  <body>
+  <body class='bg'>
     <h1><%= title %></h1>
     </div>
     <script>
@@ -22,7 +22,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <script>
-        console.log(date_labels);
         var <%="myChart"+i%> = new Chart(
             document.getElementById("<%="myChart"+i%>"),
             { type: 'line',
@@ -36,7 +35,7 @@
                 },
             options: {plugins: {title: {
                             display: true,
-                            text: "Area: " + size + " m^2",
+                            text: "Size: " + size + " m^2",
                             }   
                     },
                 scales: {
@@ -68,10 +67,15 @@
             data: price_data,
         });
         */
-    </script> 
+    </script>
+    <%if (size_list[keys[i]][2][0] > 0) { %>
     <p>
-        Estimated Price: 
+        We predict this apartment will be sold at: <%=size_list[keys[i]][2][0]%>0000 KRW (<%=size_list[keys[i]][2][1];%>%)
     </p>
-    <% } %>
+    <%} else {%>
+        <p>
+            Prediction unsupported due to lack of enough data.
+        </p>
+    <%}} %>
   </body>
 </html>

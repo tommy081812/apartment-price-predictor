@@ -17,7 +17,7 @@ function renderIndex(res,render_data){
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.render('index', {title:'Search Your Apartment', price_list:[], name_value:'', dong_list:dong_list, dong_value:'Any', total_page:1});
+    res.render('index', {title:'Find Your Apartment Price in Seoul, Korea', price_list:[], name_value:'', dong_list:dong_list, dong_value:'Any', total_page:1});
 });
 
 
@@ -28,7 +28,7 @@ router.get('/:dong_value/:name_value/:curr_page', function(req, res, next) {
     curr_page = req.params.curr_page;
 
     var render_data = {
-        title:'Search Results',
+        title:'Choose Your Apartment',
         price_list:false,
         name_value:name_value,
         curr_page:curr_page,
@@ -59,6 +59,7 @@ router.get('/:dong_value/:name_value/:curr_page', function(req, res, next) {
     dong_value = req.params.dong_value;
     name_value = req.params.name_value;
 
+
     mariadb.query("SELECT price, sold_date, size FROM apart_price_clone WHERE name=? AND dong=?", [name_value, dong_value], function(err, rows, fields) {
         if (!err) {
             var size_list = {};
@@ -68,23 +69,34 @@ router.get('/:dong_value/:name_value/:curr_page', function(req, res, next) {
             for (var i=0; i < rows.length; i++) {
                 var size = rows[i]['size'];
                 if (!(size in size_list)) {
-                    size_list[size] = [[], []];
+                    size_list[size] = [[], [], []];
                 }
                 size_list[size][0].push(rows[i]['price']);
-                console.log(rows[i]['sold_date']);
                 size_list[size][1].push(rows[i]['sold_date']);
                 //price[i] = rows[i]['price'];
                 //date[i] = rows[i]['sold_date'];
             }
-            res.render('graph',{title: dong_value + " " + name_value, size_list:size_list});
+            mariadb.query("SELECT DISTINCT p.size, p.price FROM apart_price_clone AS a, prediction AS p WHERE a.dong=? AND a.name=? AND a.street_adress_code=p.street_adress_code AND p.size=a.size", [dong_value, name_value], function(err, rows, fields) {
+                if (!err) {
+                    console.log(rows);
+                    for (var i=0; i < rows.length; i++) {
+                        console.log(rows[i]['price']);
+                        size_list[rows[i]['size']][2].push(rows[i]['price']);
+                        var price_data = size_list[rows[i]['size']][0];
+                        var last = price_data[price_data.length-1];
+                        var percent = (rows[i]['price'] - last) / last * 100;
+                        percent = parseInt(percent*100)/100;
+                        size_list[rows[i]['size']][2].push(percent);
+                    }
+                    res.render('graph',{title: dong_value + " " + name_value, size_list:size_list});
+                } else {
+                    console.log("err query")
+                }
+            });
             //res.render('graph',{title: dong_value + " " + name_value, price:price, date:date});
         } else {
             console.log("err graph");
         }
-    });
-
-    mariadb.query("SELECT DISTINCT p.size, p.price FROM apart_price_clone AS a, prediction AS p WHERE a.dong=? AND a.name=? AND a.street_adress_code=p.street_adress_code AND p.size=a.size", [name_value, dong_value], function(err, rows, fields) {
-
     });
   });
  
