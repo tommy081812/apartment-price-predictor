@@ -11,7 +11,7 @@ I also made a ML model that predicts the upcoming price of a each apartment to h
 Python, SQL, MariaDB, HTML, CSS, JavaScript, Node.js, EJS, Vue.js
 
 # Data
-Downloaded data from public datasets provided by https://www.data.go.kr
+Downloaded data from public datasets provided by https://www.data.go.kr \\
 used given API with Python and stored in database created with MariaDB
 
 # Data Analysis
