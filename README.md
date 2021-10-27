@@ -8,9 +8,9 @@ I also made a ML model that predicts the upcoming price of a each apartment to h
 
 
 # Tech Stack
-Front-End: HTML, CSS, JavaScript, Vue.js \\
-Back-End: EJS, Node.js, JavaScript //
-Database: MariaDB, MySQL
+Front-End: HTML, CSS, JavaScript, Vue.js <br\>
+Back-End: EJS, Node.js, JavaScript <br\>
+Database: MariaDB, MySQL <br\>
 Data processing: Python
 
 # Data
