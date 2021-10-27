@@ -11,7 +11,7 @@ I also made a ML model that predicts the upcoming price of a each apartment to h
 Front-End: HTML, CSS, JavaScript, Vue.js <br />
 Back-End: EJS, Node.js, JavaScript <br />
 Database: MariaDB, MySQL <br />
-Data processing: Python
+Data Processing: Python
 
 # Data
 Downloaded data from public datasets provided by https://www.data.go.kr <br>
